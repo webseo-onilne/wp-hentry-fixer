@@ -5,7 +5,7 @@ Plugin URI: https://github.com/michaeldoye/wp-hentry-fixer
 Description: Fixes missing hentry errors for single posts and archive pages.
 Author: Web SEO Online (PTY) LTD
 Author URI: https://webseo.co.za
-Version: 0.1.1
+Version: 0.1.2
 
   Copyright: © 2016 Web SEO Online (PTY) LTD (email : michael@webseo.co.za)
   License: GNU General Public License v3.0
@@ -120,7 +120,10 @@ if ( ! class_exists( 'HentryFixer' ) ) {
        */
     public function __construct() {
       add_filter( 'the_content', array( $this, 'hatom_data_in_content'), 100 ); 
-      add_filter( 'post_class', array( $this, 'remove_hentry_class'), 100 );                    
+      add_filter( 'post_class', array( $this, 'remove_hentry_class'), 100 );
+      if ( get_option('redirect_attachment_pages_to_parent_else_home') == 'on') {
+      	add_action( 'template_redirect', array( $this, 'redirect_attachment_pages' ), 100 );                    
+      }
     }
 
     /**
@@ -176,18 +179,19 @@ if ( ! class_exists( 'HentryFixer' ) ) {
     /**
      * redirect_attachment_pages
      * Redirect attachment pages to post parent, or home page if no post parent is found
+     * @return boolean False when no redirect was triggered
      **/
     public function redirect_attachment_pages() {
-      if ( get_option('redirect_attachment_pages_to_parent_else_home') == 'on' && is_attachment() ) {
-        global $post;
-        if ( $post && $post->post_parent ) {
-          wp_redirect( get_permalink( $post->post_parent ), 301 );
-          exit;
-        } else {
-          wp_redirect( home_url( '/' ), 301 );
-          exit;
-        }
-      }
+
+		global $post;
+	    if ( is_attachment() && ( ( is_object( $post ) && isset( $post->post_parent ) ) && ( is_numeric( $post->post_parent ) && $post->post_parent != 0 ) ) ) {
+	      wp_safe_redirect( get_permalink( $post->post_parent ), 301 );
+	      exit;
+	    } elseif ( is_attachment() && $post->post_parent == 0 )  {
+	      wp_safe_redirect( home_url( '/' ), 301 );
+	      exit;
+	    }
+		return false;
     }
 
   }
