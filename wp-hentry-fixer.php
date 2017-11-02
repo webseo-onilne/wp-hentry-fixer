@@ -83,10 +83,10 @@ function wp_hentry_fixer_page() {
             </tr>
 
             <tr>
-                <th align="left" valign="top">Redirect attachment pages to post parent,<br/>or home page if no post parent is found</th>
+                <th align="left" valign="top">Redirect attachment pages to post parent,<br/>or home page if unattached to any post parent</th>
                 <td>
                     <label>
-                        <input type="checkbox" name="redirect_attachment_pages_to_parent_else_home" <?php echo esc_attr( get_option('redirect_attachment_pages_to_parent_else_home') ) == 'on' ? 'checked="checked"' : ''; ?> />Yes, redirect attachment pages to parent pages or the home page if attachment is <em>unattached</em>
+                        <input type="checkbox" name="redirect_attachment_pages_to_parent_else_home" <?php echo esc_attr( get_option('redirect_attachment_pages_to_parent_else_home') ) == 'on' ? 'checked="checked"' : ''; ?> />Yes, redirect attachment pages to parent pages or the home page if <em>unattached</em>
                     </label>
                 </td>
             </tr>
