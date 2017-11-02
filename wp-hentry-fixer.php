@@ -26,9 +26,11 @@ add_action('admin_menu', function() {
 
 add_action( 'admin_init', function() {
     register_setting( 'wp-hentry-fixer-settings', 'remove_hentry_class_from_pages' );
+    register_setting( 'wp-hentry-fixer-settings', 'remove_hentry_class_from_attachment_pages' );
     register_setting( 'wp-hentry-fixer-settings', 'inject_hatom_on_archive_pages' );
     register_setting( 'wp-hentry-fixer-settings', 'inject_hatom_on_single_post_pages' );
     register_setting( 'wp-hentry-fixer-settings', 'inject_hatom_on_posts_page' );
+    register_setting( 'wp-hentry-fixer-settings', 'redirect_attachment_pages_to_parent_else_home' );
 });
 
 function wp_hentry_fixer_page() {
@@ -81,7 +83,7 @@ function wp_hentry_fixer_page() {
             </tr>
 
             <tr>
-                <th align="left" valign="top">Redirect attachment pages to post parent, or home page if no post parent is found</th>
+                <th align="left" valign="top">Redirect attachment pages to post parent,<br/>or home page if no post parent is found</th>
                 <td>
                     <label>
                         <input type="checkbox" name="redirect_attachment_pages_to_parent_else_home" <?php echo esc_attr( get_option('redirect_attachment_pages_to_parent_else_home') ) == 'on' ? 'checked="checked"' : ''; ?> />Yes, redirect attachment pages to parent pages or the home page if attachment is <em>unattached</em>
