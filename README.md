@@ -1,4 +1,6 @@
 # WP Hentry Fixer
+<p>Fix hAtom errors appearing in Google Search Console (Search Appearance > Structured Data)</p>
+
 <p><strong>Summary</strong></p>
 <ul>
     <li>Fixes missing hentry errors for single posts and archive pages</li>
