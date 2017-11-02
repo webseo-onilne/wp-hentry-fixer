@@ -1,7 +1,10 @@
 # WP Hentry Fixer
-Fixes missing hentry errors for single posts and archive pages
-Removes hentry classes on standarad pages and attachment pages
-Redirects attachment pages to post parent page or home page if unattached
+<p><strong>Summary</strong></p>
+<ul>
+    <li>Fixes missing hentry errors for single posts and archive pages</li>
+    <li>Removes hentry classes on standarad pages and attachment pages</li>
+    <li>Redirects attachment pages to post parent page or home page if unattached</li>
+</ul>
 
 <p><strong>Detail Overview</strong></p>
 <p><strong>WP Hentry Fixer</strong> allows you to rectify common <em>hAtom errors </em> appearing in Google Search Console (Search Appearance > Structured Data) in the following ways:</p>
