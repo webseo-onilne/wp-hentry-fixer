@@ -5,13 +5,13 @@ Plugin URI: https://github.com/michaeldoye/wp-hentry-fixer
 Description: Fixes missing hentry errors for single posts and archive pages.
 Author: Web SEO Online (PTY) LTD
 Author URI: https://webseo.co.za
-Version: 0.2.0
+Version: 0.1.2
 
   Copyright: © 2016 Web SEO Online (PTY) LTD (email : michael@webseo.co.za)
   License: GNU General Public License v3.0
   License URI: http://www.gnu.org/licenses/gpl-3.0.html
 */
-
+  
 if (!defined('ABSPATH')) die ('No direct access allowed');
 
 /**
@@ -163,24 +163,34 @@ if ( ! class_exists( 'HentryFixer' ) ) {
     **/
     public function add_ld_script() {
 
-      if ( get_option('add_woocommerce_product_schema') == 'on' ) {
+      if ( get_option('add_woocommerce_product_schema') == 'on' && in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
         global $woocommerce, $post;
         $product = wc_get_product( $post->ID );
         $terms = get_the_terms( $post->ID, 'product_cat' );
         $image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'single-post-thumbnail' );
         if ( is_product() ) { ?>
-          <!-- WP Hentry Fixer -->
+          <!-- JSON-LD Script -->
           <script type="application/ld+json">
           {
             "@context": "http://schema.org/",
             "@type": "Product",
-            "name": "<?php echo $product->get_title() ?>",
-            "image": "<?php echo $image[0] ?>",
-            "description": "<?php echo get_post( $post->ID )->post_content ?>",
-            "mpn": "<?php echo $product->get_sku() ?>",
+            <?php if( $product->get_title() ) : ?>
+              "name": "<?php echo $product->get_title() ?>",
+            <?php endif; ?>
+            <?php if( $image[0] ) : ?>
+              "image": "<?php echo $image[0] ?>",
+            <?php endif; ?>
+            <?php if( get_post( $post->ID )->post_content ) : ?>
+              "description": "<?php echo get_post( $post->ID )->post_content ?>",
+            <?php endif; ?>
+            <?php if( $product->get_sku() ) : ?>
+              "mpn": "<?php echo $product->get_sku() ?>",
+            <?php endif; ?>
             "brand": {
               "@type": "Thing",
-              "name": "<?php echo $terms[0]->name ?>"
+              <?php if( $terms[0]->name ) : ?>
+                "name": "<?php echo $terms[0]->name ?>"
+              <?php endif; ?>
             },
             "aggregateRating": {
               "@type": "AggregateRating",
@@ -189,8 +199,12 @@ if ( ! class_exists( 'HentryFixer' ) ) {
             },
             "offers": {
               "@type": "Offer",
-              "priceCurrency": "<?php echo get_woocommerce_currency(); ?>",
-              "price": "<?php echo $product->get_price() ?>",
+              <?php if( get_woocommerce_currency() ) : ?>
+                "priceCurrency": "<?php echo get_woocommerce_currency() ?>",
+              <?php endif; ?>
+              <?php if( $product->get_price() ) : ?>
+                "price": "<?php echo $product->get_price() ?>",
+              <?php endif; ?>
               "itemCondition": "http://schema.org/UsedCondition",
               "availability": "http://schema.org/InStock",
               "seller": {
